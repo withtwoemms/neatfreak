@@ -18,4 +18,6 @@ def find_all_files_that_should_be_compressed(folder)
   end
 end
 
-find_all_files_that_should_be_compressed("/Users/Ellis/Desktop/test_for_nf")
+# replace the argument below with the folder that you want to target. 
+# to run this on your entire computer use "/" as the argument.
+# find_all_files_that_should_be_compressed("/Users/Ellis/Desktop/test_for_nf")
