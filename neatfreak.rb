@@ -33,10 +33,8 @@ def find_all_files_that_should_be_decompressed(folder)
     all_files_in_this_directory.each do |path|
         if File.extname(path) == ".gz"
             # Create a compressed version of the file
-            zstream = Zlib::Inflate.new
-            File.write("#{path.chomp('.gz')}", zstream.inflate(path))
-            zstream.finish
-            zstream.close
+            File.write("#{path.chomp('.gz')}", Zlib.inflate(path))
+
             # Delete the uncompressed file
             File.unlink(path)
         end
