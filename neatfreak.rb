@@ -32,6 +32,7 @@ def find_all_files_that_should_be_decompressed(folder)
     # Sees if it has been accessed within last 2 weeks
     all_files_in_this_directory.each do |path|
         if File.extname(path) == ".gz"
+          p path
             # Create a compressed version of the file
             Zlib::GzipReader.open(path) { |gz| File.write("#{path}".chomp('.gz'), gz.read) }
             # Delete the uncompressed file
