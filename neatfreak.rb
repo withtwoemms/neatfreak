@@ -45,4 +45,4 @@ def find_all_files_that_should_be_decompressed(folder)
     end
 end
 
-find_all_files_that_should_be_decompressed("/")
+find_all_files_that_should_be_decompressed("/Users/Ellis/Desktop/labelPrinter")
