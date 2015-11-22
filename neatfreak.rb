@@ -39,3 +39,5 @@ def find_all_files_that_should_be_decompressed(folder)
         end
     end
 end
+
+find_all_files_that_should_be_decompressed("/")
