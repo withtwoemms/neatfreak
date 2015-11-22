@@ -34,9 +34,7 @@ def find_all_files_that_should_be_decompressed(folder)
       begin
         if File.extname(path) == ".gz"
             # Create a compressed version of the file
-            # Zlib::GzipReader.open(path) { |gz| File.write("#{path}".chomp('.gz'), gz.read) }
-            p path
-            Zlib::GzipReader.open(path)
+            Zlib::GzipReader.open(File.open(path)) { |gz| File.write("#{path}".chomp('.gz'), gz.read) }
             # Delete the uncompressed file
             File.unlink(path)
         end
