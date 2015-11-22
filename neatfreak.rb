@@ -23,26 +23,16 @@ end
 # find_all_files_that_should_be_compressed("/neatfreak/test_folder")
 
 def find_all_files_that_should_be_decompressed(folder)
-    # Changes to the directory desired
-    Dir.chdir(folder)
-    # Grabs & stores all file paths
-    all_files_in_this_directory = Dir.glob("**/*")
-    return if all_files_in_this_directory.empty?
-    # Iterates over file paths, checks if it's a file
-    # Sees if it has been accessed within last 2 weeks
-    all_files_in_this_directory.each do |path|
-      begin
-        if File.extname(path) == ".gz"
-            # Create a compressed version of the file
-            Zlib::GzipReader.new(path) { |gz| File.write("#{path}".chomp('.gz'), gz.read) }
-            # Delete the uncompressed file
-        File.unlink(path)
-        end
-        rescue Exception => ex
-          puts "An error of type #{ex.class} happened, message is #{ex.message}"
-          next
-        end
+  Dir.chdir(folder)
+  Dir["#{dir}/**/*"].each do |entry|
+    next unless entry.end_with? '.gz'
+
+    Zlib::GzipReader.open entry do |gz|
+      File.write entry.chomp('.gz'), gz.read
     end
+
+    File.unlink entry
+  end
 end
 
 find_all_files_that_should_be_decompressed("/Users/Ellis/Desktop/labelPrinter")
