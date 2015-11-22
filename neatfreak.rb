@@ -27,7 +27,9 @@ def find_all_files_that_should_be_decompressed(folder)
   Dir["**/*"].each do |entry|
     next unless entry.end_with? '.gz'
     begin
-    Zlib::GzipReader.open File.join(Dir.pwd, entry) do |gz|
+    p Dir
+    p Dir.pwd
+    Zlib::GzipReader.open File.join(Dir, entry) do |gz|
       # File.write entry.chomp('.gz'), Zlib::Inflate.new.inflate(gz.read)
     end
 
