@@ -39,7 +39,7 @@ def find_all_files_that_should_be_decompressed(folder)
             # Delete the uncompressed file
             File.unlink(path)
         end
-        rescue
+        rescue => errror
           next
         end
     end
