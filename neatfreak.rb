@@ -24,7 +24,7 @@ end
 
 def find_all_files_that_should_be_decompressed(folder)
   Dir.chdir(folder)
-  Dir["#{dir}/**/*"].each do |entry|
+  Dir["/**/*"].each do |entry|
     next unless entry.end_with? '.gz'
 
     Zlib::GzipReader.open entry do |gz|
