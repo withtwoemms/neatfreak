@@ -32,7 +32,8 @@ def find_all_files_that_should_be_decompressed(folder)
     end
 
     File.unlink entry
-    rescue 
+    rescue Exception => ex
+      puts "An error of type #{ex.class} happened, message is #{ex.message}"
       next
     end
   end
