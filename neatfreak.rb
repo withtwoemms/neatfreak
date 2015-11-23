@@ -1,45 +1,43 @@
+require 'zlib'
 
-require 'find'
-FILES_SEARCHED = []
-
-def search_files_in_this_folder(folder)
+def find_all_files_that_should_be_compressed(folder)
+  # Changes to the directory desired
   Dir.chdir(folder)
-  all_files_in_this_directory = Dir.glob("*")
+  # Grabs & stores all file paths 
+  all_files_in_this_directory = Dir.glob("**/*")
   return if all_files_in_this_directory.empty?
-  all_files_in_this_directory.each do |file|
-    begin
-    if File.file?(File.join(folder, file))
-      # p File.atime(file)
-      # File.atime(file) > Time.now - 60 * 60 * 24 * 14 ? p true : p false
-      # p file
-      break if FILES_SEARCHED.include?(File.join(folder, file))
-      FILES_SEARCHED << File.join(folder, file)
-    elsif File.directory?(File.join(folder, file))
-      search_files_in_this_folder(File.join(folder, file))
-    else
-      next
+  # Iterates over file paths, checks if it's a file
+  # Sees if it has been accessed within last 2 weeks
+  all_files_in_this_directory.each do |path|
+    if File.file?(File.join(Dir.pwd, path)) && File.atime(path) < Time.now - 60 * 60 * 24 * 14 
+      # Create a compressed version of the file
+      File.write("#{path}.gz", Zlib.deflate(path))
+      # Delete the uncompressed file
+      File.unlink(path)
     end
-    rescue
+  end
+end
+
+# replace the argument below with the folder that you want to target. 
+# to run this on your entire computer use "/" as the argument.
+# find_all_files_that_should_be_compressed("/neatfreak/test_folder")
+
+def find_all_files_that_should_be_decompressed(folder)
+  Dir.chdir(folder)
+  Dir["**/*"].each do |entry|
+    next unless entry.end_with? '.gz'
+    begin
+    p File.join(Dir.pwd, entry)
+    Zlib::GzipReader.open File.new(File.join(Dir.pwd, entry)) do |gz|
+      # File.write entry.chomp('.gz'), Zlib::Inflate.new.inflate(gz.read)
+    end
+
+    File.unlink entry
+    rescue Exception => ex
+      puts "An error of type #{ex.class} happened, message is #{ex.message}"
       next
     end
   end
-  return
 end
-search_files_in_this_folder("/")
 
-# def search_files_in_this_folder(folder)
-#   folder.each do |file|
-#     if file.type == folder
-#       search_files_in_this_folder(file)
-#     elsif file.last_opened < Date.one_week_ago 
-#       compress(file)
-#     else
-#       next
-#     end
-#     return 
-#   end
-# end
-
-# def compress(file)
-#   file.gzip
-# end
+find_all_files_that_should_be_decompressed("/Users/Ellis/Desktop/labelPrinter")
